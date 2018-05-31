@@ -496,6 +496,17 @@ For more information, see https://webpack.js.org/api/cli/.`);
 					);
 				} else if (stats.hash !== lastHash) {
 					lastHash = stats.hash;
+					if (stats.compilation && stats.compilation.errors.length !== 0) {
+						const errors = stats.compilation.errors;
+						if (errors[0].name === "EntryModuleNotFoundError") {
+							stdout.write("\n" + errors[0].error.toString() + "\n");
+							stdout.write(
+								"\n" + "ERROR Insufficient number of arguments provided " +
+								"\n" + "INFO Alternatively, run `webpack(-cli) --help` for usage info." +
+								"\n\n"
+							);
+						}
+					}
 					const statsString = stats.toString(outputOptions);
 					const delimiter = outputOptions.buildDelimiter
 						? `${outputOptions.buildDelimiter}\n`
